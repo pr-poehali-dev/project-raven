@@ -36,68 +36,7 @@ const Index = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [activeTab, setActiveTab] = useState('home');
 
-  const products: Product[] = [
-    {
-      id: 1,
-      name: 'Wireless Headphones Pro',
-      price: 12990,
-      image: 'https://cdn.poehali.dev/projects/c9a93bbe-c20d-4a55-a17d-53e35d90cb9e/files/49967593-cd41-412a-8794-c93b15e4cbda.jpg',
-      category: 'Электроника',
-      rating: 4.8,
-      reviews: 124,
-      description: 'Премиальные беспроводные наушники с шумоподавлением'
-    },
-    {
-      id: 2,
-      name: 'Smart Watch Elite',
-      price: 24990,
-      image: 'https://cdn.poehali.dev/projects/c9a93bbe-c20d-4a55-a17d-53e35d90cb9e/files/4479cc58-bb53-4d40-88f9-4652d6d0e508.jpg',
-      category: 'Аксессуары',
-      rating: 4.9,
-      reviews: 89,
-      description: 'Умные часы с мониторингом здоровья и фитнес-трекером'
-    },
-    {
-      id: 3,
-      name: 'Premium Cosmetics Set',
-      price: 8990,
-      image: 'https://cdn.poehali.dev/projects/c9a93bbe-c20d-4a55-a17d-53e35d90cb9e/files/665ec989-f671-42d7-bdf2-099318bb6c8f.jpg',
-      category: 'Красота',
-      rating: 4.7,
-      reviews: 156,
-      description: 'Набор премиальной косметики для ежедневного ухода'
-    },
-    {
-      id: 4,
-      name: 'Gaming Mouse X1',
-      price: 6990,
-      image: 'https://cdn.poehali.dev/projects/c9a93bbe-c20d-4a55-a17d-53e35d90cb9e/files/49967593-cd41-412a-8794-c93b15e4cbda.jpg',
-      category: 'Электроника',
-      rating: 4.6,
-      reviews: 203,
-      description: 'Профессиональная игровая мышь с RGB-подсветкой'
-    },
-    {
-      id: 5,
-      name: 'Leather Backpack',
-      price: 15990,
-      image: 'https://cdn.poehali.dev/projects/c9a93bbe-c20d-4a55-a17d-53e35d90cb9e/files/4479cc58-bb53-4d40-88f9-4652d6d0e508.jpg',
-      category: 'Аксессуары',
-      rating: 4.9,
-      reviews: 67,
-      description: 'Стильный кожаный рюкзак для работы и путешествий'
-    },
-    {
-      id: 6,
-      name: 'Skincare Bundle',
-      price: 11990,
-      image: 'https://cdn.poehali.dev/projects/c9a93bbe-c20d-4a55-a17d-53e35d90cb9e/files/665ec989-f671-42d7-bdf2-099318bb6c8f.jpg',
-      category: 'Красота',
-      rating: 4.8,
-      reviews: 178,
-      description: 'Полный набор для комплексного ухода за кожей'
-    },
-  ];
+  const products: Product[] = [];
 
   const customerReviews: Review[] = [
     {
@@ -191,7 +130,7 @@ const Index = () => {
                 <Icon name="ShoppingBag" size={24} className="text-white" />
               </div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                ShopVibe
+                Codeko
               </h1>
             </div>
             
@@ -487,7 +426,7 @@ const Index = () => {
               Отзывы покупателей
             </h2>
             <p className="text-center text-muted-foreground mb-12">
-              Что говорят наши клиенты о ShopVibe
+              Что говорят наши клиенты о Codeko
             </p>
             <div className="grid gap-6">
               {customerReviews.map((review, index) => (
@@ -544,7 +483,7 @@ const Index = () => {
             <Card className="p-8">
               <div className="prose prose-lg max-w-none">
                 <p className="text-lg text-muted-foreground mb-6">
-                  ShopVibe — это современная платформа для онлайн-покупок, где стиль встречается с качеством.
+                  Codeko — это современная платформа для онлайн-покупок, где стиль встречается с качеством.
                   Мы тщательно отбираем каждый товар, чтобы предложить вам только лучшее.
                 </p>
                 
@@ -620,7 +559,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold text-xl mb-4">ShopVibe</h3>
+              <h3 className="font-bold text-xl mb-4">Codeko</h3>
               <p className="text-purple-200">
                 Ваш надежный партнер в мире онлайн-шопинга
               </p>
