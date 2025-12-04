@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { toast } from '@/components/ui/use-toast';
 import Icon from '@/components/ui/icon';
 
 interface Review {
@@ -20,6 +21,15 @@ interface Review {
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showChat, setShowChat] = useState(false);
+  const [chatMessage, setChatMessage] = useState('');
 
   const customerReviews: Review[] = [
     {
@@ -55,6 +65,75 @@ const Index = () => {
       comment: 'Сотрудничаю уже третий раз. Всегда всё на высоте - от идеи до реализации!'
     },
   ];
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('https://functions.poehali.dev/ad88e080-1575-403a-a66f-a4db62e33c70', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Успех!",
+          description: data.message || "Сообщение отправлено успешно!",
+        });
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        throw new Error(data.error || 'Failed to send message');
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось отправить сообщение. Попробуйте позже.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChatSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatMessage.trim()) return;
+
+    try {
+      const response = await fetch('https://functions.poehali.dev/ad88e080-1575-403a-a66f-a4db62e33c70', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: 'Чат поддержки',
+          email: 'chat@support.com',
+          subject: 'Сообщение из чата',
+          message: chatMessage
+        }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Сообщение отправлено!",
+          description: "Мы ответим вам в ближайшее время.",
+        });
+        setChatMessage('');
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось отправить сообщение.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const renderStars = (rating: number) => {
     return (
@@ -597,25 +676,50 @@ const Index = () => {
 
             <Card className="p-8">
               <h3 className="text-2xl font-bold mb-6">Форма обратной связи</h3>
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleFormSubmit}>
                 <div>
                   <label className="block text-sm font-medium mb-2">Ваше имя</label>
-                  <Input placeholder="Иван Иванов" />
+                  <Input 
+                    placeholder="Иван Иванов" 
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    required
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Email</label>
-                  <Input type="email" placeholder="ivan@example.com" />
+                  <Input 
+                    type="email" 
+                    placeholder="ivan@example.com" 
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    required
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Тема</label>
-                  <Input placeholder="Создание Telegram-бота" />
+                  <Input 
+                    placeholder="Создание Telegram-бота" 
+                    value={formData.subject}
+                    onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Сообщение</label>
-                  <Textarea placeholder="Расскажите о вашем проекте..." rows={5} />
+                  <Textarea 
+                    placeholder="Расскажите о вашем проекте..." 
+                    rows={5}
+                    value={formData.message}
+                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                    required
+                  />
                 </div>
-                <Button className="w-full gradient-primary text-white font-semibold">
-                  Отправить сообщение
+                <Button 
+                  type="submit" 
+                  className="w-full gradient-primary text-white font-semibold"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Отправка...' : 'Отправить сообщение'}
                   <Icon name="Send" size={18} className="ml-2" />
                 </Button>
               </form>
@@ -724,6 +828,52 @@ const Index = () => {
           </div>
         )}
       </main>
+
+      {!showChat && (
+        <button
+          onClick={() => setShowChat(true)}
+          className="fixed bottom-6 right-6 w-16 h-16 gradient-primary rounded-full shadow-2xl flex items-center justify-center text-white hover:scale-110 transition-transform z-50 animate-pulse"
+        >
+          <Icon name="MessageCircle" size={28} />
+        </button>
+      )}
+
+      {showChat && (
+        <div className="fixed bottom-6 right-6 w-96 bg-white rounded-2xl shadow-2xl border-2 border-primary/20 z-50 animate-fade-in">
+          <div className="gradient-primary p-4 rounded-t-2xl flex items-center justify-between text-white">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <Icon name="Bot" size={20} />
+              </div>
+              <div>
+                <h3 className="font-bold">Поддержка Codeko</h3>
+                <p className="text-xs opacity-90">Обычно отвечаем в течение часа</p>
+              </div>
+            </div>
+            <button onClick={() => setShowChat(false)} className="hover:bg-white/20 rounded-lg p-2 transition-colors">
+              <Icon name="X" size={20} />
+            </button>
+          </div>
+          <div className="p-4 max-h-96 overflow-y-auto">
+            <div className="bg-muted rounded-lg p-4 mb-4">
+              <p className="text-sm">👋 Здравствуйте! Чем могу помочь?</p>
+            </div>
+          </div>
+          <form onSubmit={handleChatSubmit} className="p-4 border-t">
+            <div className="flex gap-2">
+              <Input
+                placeholder="Напишите сообщение..."
+                value={chatMessage}
+                onChange={(e) => setChatMessage(e.target.value)}
+                className="flex-1"
+              />
+              <Button type="submit" size="icon" className="gradient-primary text-white flex-shrink-0">
+                <Icon name="Send" size={18} />
+              </Button>
+            </div>
+          </form>
+        </div>
+      )}
 
       <footer className="bg-gradient-to-r from-purple-900 via-pink-900 to-orange-900 text-white mt-20 py-12">
         <div className="container mx-auto px-4">

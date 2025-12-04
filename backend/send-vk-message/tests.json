@@ -1,0 +1,36 @@
+{
+  "tests": [
+    {
+      "name": "Send contact form message to VK",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "Тестовый пользователь",
+        "email": "test@example.com",
+        "subject": "Тестовое сообщение",
+        "message": "Это тестовое сообщение из формы обратной связи"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "message": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Reject empty message",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "Тест",
+        "email": "test@example.com",
+        "message": ""
+      },
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
