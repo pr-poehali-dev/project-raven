@@ -1,27 +1,13 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Icon from '@/components/ui/icon';
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  rating: number;
-  reviews: number;
-  description: string;
-}
-
-interface CartItem extends Product {
-  quantity: number;
-}
 
 interface Review {
   id: number;
@@ -33,19 +19,16 @@ interface Review {
 }
 
 const Index = () => {
-  const [cart, setCart] = useState<CartItem[]>([]);
   const [activeTab, setActiveTab] = useState('home');
-
-  const products: Product[] = [];
 
   const customerReviews: Review[] = [
     {
       id: 1,
       author: 'Анна Иванова',
-      avatar: 'AI',
+      avatar: 'АИ',
       rating: 5,
       date: '15 ноября 2024',
-      comment: 'Отличный магазин! Быстрая доставка, качественные товары. Наушники превзошли все ожидания!'
+      comment: 'Отличная работа! Бот для Telegram работает стабильно, все функции реализованы идеально. Рекомендую!'
     },
     {
       id: 2,
@@ -53,7 +36,7 @@ const Index = () => {
       avatar: 'МП',
       rating: 5,
       date: '10 ноября 2024',
-      comment: 'Заказывал умные часы - пришли через 2 дня. Упаковка супер, всё оригинальное. Рекомендую!'
+      comment: 'Заказывал чат-бота для сайта - результат превзошёл ожидания. Быстро, качественно, профессионально!'
     },
     {
       id: 3,
@@ -61,7 +44,7 @@ const Index = () => {
       avatar: 'ЕС',
       rating: 4,
       date: '5 ноября 2024',
-      comment: 'Хороший выбор косметики. Цены адекватные. Одна звезда минус за задержку с доставкой.'
+      comment: 'Хорошая работа с автоматизацией задач. Бот экономит массу времени. Спасибо!'
     },
     {
       id: 4,
@@ -69,41 +52,9 @@ const Index = () => {
       avatar: 'ДС',
       rating: 5,
       date: '1 ноября 2024',
-      comment: 'Покупаю здесь уже третий раз. Всегда всё на высоте - от ассортимента до обслуживания!'
+      comment: 'Сотрудничаю уже третий раз. Всегда всё на высоте - от идеи до реализации!'
     },
   ];
-
-  const addToCart = (product: Product) => {
-    setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
-      if (existing) {
-        return prev.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
-  };
-
-  const removeFromCart = (productId: number) => {
-    setCart(prev => prev.filter(item => item.id !== productId));
-  };
-
-  const updateQuantity = (productId: number, change: number) => {
-    setCart(prev =>
-      prev.map(item =>
-        item.id === productId
-          ? { ...item, quantity: Math.max(1, item.quantity + change) }
-          : item
-      )
-    );
-  };
-
-  const getTotalPrice = () => {
-    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  };
 
   const renderStars = (rating: number) => {
     return (
@@ -111,7 +62,7 @@ const Index = () => {
         {[1, 2, 3, 4, 5].map((star) => (
           <Icon
             key={star}
-            name={star <= rating ? "Star" : "Star"}
+            name="Star"
             size={16}
             className={star <= rating ? "fill-accent text-accent" : "text-gray-300"}
           />
@@ -127,20 +78,41 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center">
-                <Icon name="ShoppingBag" size={24} className="text-white" />
+                <Icon name="Bot" size={24} className="text-white" />
               </div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 Codeko
               </h1>
             </div>
             
-            <nav className="hidden md:flex gap-6">
+            <nav className="hidden md:flex gap-4">
               <Button
                 variant={activeTab === 'home' ? 'default' : 'ghost'}
                 onClick={() => setActiveTab('home')}
                 className="font-medium"
               >
                 Главная
+              </Button>
+              <Button
+                variant={activeTab === 'services' ? 'default' : 'ghost'}
+                onClick={() => setActiveTab('services')}
+                className="font-medium"
+              >
+                Услуги
+              </Button>
+              <Button
+                variant={activeTab === 'portfolio' ? 'default' : 'ghost'}
+                onClick={() => setActiveTab('portfolio')}
+                className="font-medium"
+              >
+                Портфолио
+              </Button>
+              <Button
+                variant={activeTab === 'blog' ? 'default' : 'ghost'}
+                onClick={() => setActiveTab('blog')}
+                className="font-medium"
+              >
+                Блог
               </Button>
               <Button
                 variant={activeTab === 'reviews' ? 'default' : 'ghost'}
@@ -150,85 +122,24 @@ const Index = () => {
                 Отзывы
               </Button>
               <Button
-                variant={activeTab === 'about' ? 'default' : 'ghost'}
-                onClick={() => setActiveTab('about')}
+                variant={activeTab === 'contacts' ? 'default' : 'ghost'}
+                onClick={() => setActiveTab('contacts')}
                 className="font-medium"
               >
-                О нас
+                Контакты
+              </Button>
+              <Button
+                variant={activeTab === 'faq' ? 'default' : 'ghost'}
+                onClick={() => setActiveTab('faq')}
+                className="font-medium"
+              >
+                FAQ
               </Button>
             </nav>
 
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="relative">
-                  <Icon name="ShoppingCart" size={20} />
-                  {cart.length > 0 && (
-                    <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center gradient-accent border-0">
-                      {cart.length}
-                    </Badge>
-                  )}
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="w-full sm:max-w-lg">
-                <SheetHeader>
-                  <SheetTitle className="text-2xl font-bold">Корзина</SheetTitle>
-                  <SheetDescription>
-                    {cart.length === 0 ? 'Ваша корзина пуста' : `Товаров в корзине: ${cart.length}`}
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="mt-8 space-y-4">
-                  {cart.map((item) => (
-                    <div key={item.id} className="flex gap-4 p-4 bg-muted/50 rounded-lg">
-                      <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded-lg" />
-                      <div className="flex-1">
-                        <h4 className="font-semibold">{item.name}</h4>
-                        <p className="text-sm text-muted-foreground">{item.price.toLocaleString()} ₽</p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <Button
-                            size="icon"
-                            variant="outline"
-                            className="h-7 w-7"
-                            onClick={() => updateQuantity(item.id, -1)}
-                          >
-                            <Icon name="Minus" size={14} />
-                          </Button>
-                          <span className="w-8 text-center font-medium">{item.quantity}</span>
-                          <Button
-                            size="icon"
-                            variant="outline"
-                            className="h-7 w-7"
-                            onClick={() => updateQuantity(item.id, 1)}
-                          >
-                            <Icon name="Plus" size={14} />
-                          </Button>
-                        </div>
-                      </div>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => removeFromCart(item.id)}
-                      >
-                        <Icon name="Trash2" size={18} />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-                {cart.length > 0 && (
-                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-white border-t">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-lg font-semibold">Итого:</span>
-                      <span className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
-                        {getTotalPrice().toLocaleString()} ₽
-                      </span>
-                    </div>
-                    <Button className="w-full gradient-primary text-white font-semibold py-6">
-                      Оформить заказ
-                      <Icon name="ArrowRight" size={20} className="ml-2" />
-                    </Button>
-                  </div>
-                )}
-              </SheetContent>
-            </Sheet>
+            <Button className="gradient-primary text-white font-semibold">
+              Заказать бота
+            </Button>
           </div>
         </div>
       </header>
@@ -236,197 +147,347 @@ const Index = () => {
       <main className="container mx-auto px-4 py-12">
         {activeTab === 'home' && (
           <div className="animate-fade-in">
-            <section className="mb-16 text-center">
+            <section className="mb-16 text-center max-w-4xl mx-auto">
               <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent">
-                Стиль и качество
+                Создаю умных ботов для вашего бизнеса
               </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Откройте мир премиальных товаров с доставкой по всей России
+              <p className="text-xl text-muted-foreground mb-8">
+                Автоматизация процессов, чат-боты для Telegram, WhatsApp и веб-сайтов. Профессиональная разработка под ключ.
               </p>
+              <Button size="lg" className="gradient-primary text-white font-semibold text-lg px-8 py-6">
+                Закажи бота сейчас!
+                <Icon name="Sparkles" size={20} className="ml-2" />
+              </Button>
             </section>
 
-            <Tabs defaultValue="all" className="mb-8">
-              <TabsList className="grid w-full max-w-md mx-auto grid-cols-4">
-                <TabsTrigger value="all">Все</TabsTrigger>
-                <TabsTrigger value="electronics">Техника</TabsTrigger>
-                <TabsTrigger value="accessories">Аксессуары</TabsTrigger>
-                <TabsTrigger value="beauty">Красота</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="all" className="mt-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {products.map((product, index) => (
-                    <Card key={product.id} className="overflow-hidden hover-scale animate-slide-up border-2 hover:border-primary/50 transition-all duration-300" style={{ animationDelay: `${index * 100}ms` }}>
-                      <div className="relative overflow-hidden group">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <Badge className="absolute top-4 right-4 gradient-accent border-0">
-                          {product.category}
-                        </Badge>
-                      </div>
-                      <CardHeader>
-                        <CardTitle className="text-xl">{product.name}</CardTitle>
-                        <CardDescription>{product.description}</CardDescription>
-                        <div className="flex items-center gap-2 mt-2">
-                          {renderStars(Math.floor(product.rating))}
-                          <span className="text-sm text-muted-foreground">
-                            {product.rating} ({product.reviews})
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardFooter className="flex justify-between items-center">
-                        <div className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
-                          {product.price.toLocaleString()} ₽
-                        </div>
-                        <Button
-                          onClick={() => addToCart(product)}
-                          className="gradient-primary text-white font-semibold"
-                        >
-                          <Icon name="ShoppingCart" size={18} className="mr-2" />
-                          В корзину
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="electronics">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {products.filter(p => p.category === 'Электроника').map((product, index) => (
-                    <Card key={product.id} className="overflow-hidden hover-scale animate-slide-up border-2 hover:border-primary/50 transition-all duration-300" style={{ animationDelay: `${index * 100}ms` }}>
-                      <div className="relative overflow-hidden group">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <Badge className="absolute top-4 right-4 gradient-accent border-0">
-                          {product.category}
-                        </Badge>
-                      </div>
-                      <CardHeader>
-                        <CardTitle className="text-xl">{product.name}</CardTitle>
-                        <CardDescription>{product.description}</CardDescription>
-                        <div className="flex items-center gap-2 mt-2">
-                          {renderStars(Math.floor(product.rating))}
-                          <span className="text-sm text-muted-foreground">
-                            {product.rating} ({product.reviews})
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardFooter className="flex justify-between items-center">
-                        <div className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
-                          {product.price.toLocaleString()} ₽
-                        </div>
-                        <Button
-                          onClick={() => addToCart(product)}
-                          className="gradient-primary text-white font-semibold"
-                        >
-                          <Icon name="ShoppingCart" size={18} className="mr-2" />
-                          В корзину
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
+            <section className="mb-16">
+              <h3 className="text-3xl font-bold text-center mb-12">Примеры моих работ</h3>
+              <div className="grid md:grid-cols-3 gap-6">
+                <Card className="hover-scale border-2 hover:border-primary/50 transition-all">
+                  <CardHeader>
+                    <div className="w-12 h-12 gradient-primary rounded-lg flex items-center justify-center mb-4">
+                      <Icon name="MessageCircle" size={24} className="text-white" />
+                    </div>
+                    <CardTitle>Telegram-бот для интернет-магазина</CardTitle>
+                    <CardDescription>
+                      Автоматизация заказов, консультации клиентов, уведомления о статусе доставки
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
 
-              <TabsContent value="accessories">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {products.filter(p => p.category === 'Аксессуары').map((product, index) => (
-                    <Card key={product.id} className="overflow-hidden hover-scale animate-slide-up border-2 hover:border-primary/50 transition-all duration-300" style={{ animationDelay: `${index * 100}ms` }}>
-                      <div className="relative overflow-hidden group">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <Badge className="absolute top-4 right-4 gradient-accent border-0">
-                          {product.category}
-                        </Badge>
-                      </div>
-                      <CardHeader>
-                        <CardTitle className="text-xl">{product.name}</CardTitle>
-                        <CardDescription>{product.description}</CardDescription>
-                        <div className="flex items-center gap-2 mt-2">
-                          {renderStars(Math.floor(product.rating))}
-                          <span className="text-sm text-muted-foreground">
-                            {product.rating} ({product.reviews})
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardFooter className="flex justify-between items-center">
-                        <div className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
-                          {product.price.toLocaleString()} ₽
-                        </div>
-                        <Button
-                          onClick={() => addToCart(product)}
-                          className="gradient-primary text-white font-semibold"
-                        >
-                          <Icon name="ShoppingCart" size={18} className="mr-2" />
-                          В корзину
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
+                <Card className="hover-scale border-2 hover:border-secondary/50 transition-all">
+                  <CardHeader>
+                    <div className="w-12 h-12 gradient-accent rounded-lg flex items-center justify-center mb-4">
+                      <Icon name="Users" size={24} className="text-white" />
+                    </div>
+                    <CardTitle>Чат-бот для службы поддержки</CardTitle>
+                    <CardDescription>
+                      Ответы на частые вопросы, переадресация к оператору, сбор обратной связи
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
 
-              <TabsContent value="beauty">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {products.filter(p => p.category === 'Красота').map((product, index) => (
-                    <Card key={product.id} className="overflow-hidden hover-scale animate-slide-up border-2 hover:border-primary/50 transition-all duration-300" style={{ animationDelay: `${index * 100}ms` }}>
-                      <div className="relative overflow-hidden group">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <Badge className="absolute top-4 right-4 gradient-accent border-0">
-                          {product.category}
-                        </Badge>
-                      </div>
-                      <CardHeader>
-                        <CardTitle className="text-xl">{product.name}</CardTitle>
-                        <CardDescription>{product.description}</CardDescription>
-                        <div className="flex items-center gap-2 mt-2">
-                          {renderStars(Math.floor(product.rating))}
-                          <span className="text-sm text-muted-foreground">
-                            {product.rating} ({product.reviews})
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardFooter className="flex justify-between items-center">
-                        <div className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
-                          {product.price.toLocaleString()} ₽
-                        </div>
-                        <Button
-                          onClick={() => addToCart(product)}
-                          className="gradient-primary text-white font-semibold"
-                        >
-                          <Icon name="ShoppingCart" size={18} className="mr-2" />
-                          В корзину
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
+                <Card className="hover-scale border-2 hover:border-accent/50 transition-all">
+                  <CardHeader>
+                    <div className="w-12 h-12 gradient-primary rounded-lg flex items-center justify-center mb-4">
+                      <Icon name="Zap" size={24} className="text-white" />
+                    </div>
+                    <CardTitle>Бот для автоматизации задач</CardTitle>
+                    <CardDescription>
+                      Парсинг данных, отправка отчётов, напоминания, интеграция с CRM
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </div>
+            </section>
+
+            <section className="text-center bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 text-white rounded-2xl p-12">
+              <h3 className="text-3xl font-bold mb-4">Готов начать?</h3>
+              <p className="text-xl mb-6 opacity-90">
+                Напиши мне, и я создам идеального бота для твоих задач!
+              </p>
+              <Button size="lg" variant="secondary" className="font-semibold">
+                Связаться со мной
+                <Icon name="ArrowRight" size={20} className="ml-2" />
+              </Button>
+            </section>
+          </div>
+        )}
+
+        {activeTab === 'services' && (
+          <div className="animate-fade-in max-w-5xl mx-auto">
+            <h2 className="text-4xl font-bold mb-3 text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Мои услуги
+            </h2>
+            <p className="text-center text-muted-foreground mb-12 text-lg">
+              Полный спектр разработки ботов для любых задач
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              <Card className="p-6 hover-scale">
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 gradient-primary rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Icon name="MessageSquare" size={28} className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">Telegram-боты</h3>
+                    <p className="text-muted-foreground mb-3">
+                      Создание ботов для Telegram: от простых чат-ботов до сложных систем автоматизации
+                    </p>
+                    <Badge className="gradient-primary border-0 text-white">От 15 000 ₽</Badge>
+                    <span className="text-sm text-muted-foreground ml-2">• 5-7 дней</span>
+                  </div>
                 </div>
-              </TabsContent>
-            </Tabs>
+              </Card>
+
+              <Card className="p-6 hover-scale">
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 gradient-accent rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Icon name="Phone" size={28} className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">WhatsApp-боты</h3>
+                    <p className="text-muted-foreground mb-3">
+                      Разработка ботов для WhatsApp Business API с интеграцией в ваши системы
+                    </p>
+                    <Badge className="gradient-accent border-0 text-white">От 20 000 ₽</Badge>
+                    <span className="text-sm text-muted-foreground ml-2">• 7-10 дней</span>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6 hover-scale">
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 gradient-primary rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Icon name="Globe" size={28} className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">Чат-боты для сайтов</h3>
+                    <p className="text-muted-foreground mb-3">
+                      Интеллектуальные чат-боты с AI для консультации посетителей вашего сайта
+                    </p>
+                    <Badge className="gradient-primary border-0 text-white">От 25 000 ₽</Badge>
+                    <span className="text-sm text-muted-foreground ml-2">• 7-14 дней</span>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6 hover-scale">
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 gradient-accent rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Icon name="Settings" size={28} className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">Автоматизация задач</h3>
+                    <p className="text-muted-foreground mb-3">
+                      Боты для автоматизации рутинных задач, парсинга, уведомлений, интеграций
+                    </p>
+                    <Badge className="gradient-accent border-0 text-white">От 10 000 ₽</Badge>
+                    <span className="text-sm text-muted-foreground ml-2">• 3-5 дней</span>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            <Card className="p-8 gradient-primary text-white">
+              <h3 className="text-2xl font-bold mb-4 text-center">Что входит в разработку?</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="flex items-start gap-3">
+                  <Icon name="Check" size={20} className="flex-shrink-0 mt-1" />
+                  <span>Анализ задачи и консультация</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Icon name="Check" size={20} className="flex-shrink-0 mt-1" />
+                  <span>Разработка архитектуры бота</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Icon name="Check" size={20} className="flex-shrink-0 mt-1" />
+                  <span>Программирование и тестирование</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Icon name="Check" size={20} className="flex-shrink-0 mt-1" />
+                  <span>Деплой и настройка хостинга</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Icon name="Check" size={20} className="flex-shrink-0 mt-1" />
+                  <span>Инструкция по использованию</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Icon name="Check" size={20} className="flex-shrink-0 mt-1" />
+                  <span>Месяц поддержки после запуска</span>
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {activeTab === 'portfolio' && (
+          <div className="animate-fade-in max-w-5xl mx-auto">
+            <h2 className="text-4xl font-bold mb-3 text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Портфолио
+            </h2>
+            <p className="text-center text-muted-foreground mb-12 text-lg">
+              Реализованные проекты и успешные кейсы
+            </p>
+
+            <div className="space-y-6">
+              <Card className="overflow-hidden hover-scale">
+                <div className="md:flex">
+                  <div className="md:w-1/3 bg-gradient-to-br from-purple-600 to-pink-600 p-8 flex items-center justify-center">
+                    <Icon name="ShoppingCart" size={64} className="text-white" />
+                  </div>
+                  <CardContent className="md:w-2/3 p-6">
+                    <Badge className="mb-3 gradient-primary border-0 text-white">Telegram</Badge>
+                    <h3 className="text-2xl font-bold mb-3">Бот для интернет-магазина электроники</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Разработан полнофункциональный бот для приёма заказов, консультации клиентов и отслеживания доставки.
+                      Интеграция с CRM и системой оплаты. Увеличил конверсию на 40%.
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="outline">Python</Badge>
+                      <Badge variant="outline">Telegram Bot API</Badge>
+                      <Badge variant="outline">PostgreSQL</Badge>
+                      <Badge variant="outline">Stripe Payment</Badge>
+                    </div>
+                  </CardContent>
+                </div>
+              </Card>
+
+              <Card className="overflow-hidden hover-scale">
+                <div className="md:flex">
+                  <div className="md:w-1/3 bg-gradient-to-br from-pink-600 to-orange-600 p-8 flex items-center justify-center">
+                    <Icon name="Headphones" size={64} className="text-white" />
+                  </div>
+                  <CardContent className="md:w-2/3 p-6">
+                    <Badge className="mb-3 gradient-accent border-0 text-white">Веб-сайт</Badge>
+                    <h3 className="text-2xl font-bold mb-3">AI чат-бот для службы поддержки</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Интеллектуальный бот с использованием GPT для ответов на вопросы клиентов 24/7.
+                      Снизил нагрузку на операторов на 60%, время ответа сократилось до 10 секунд.
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="outline">Node.js</Badge>
+                      <Badge variant="outline">OpenAI API</Badge>
+                      <Badge variant="outline">React</Badge>
+                      <Badge variant="outline">WebSocket</Badge>
+                    </div>
+                  </CardContent>
+                </div>
+              </Card>
+
+              <Card className="overflow-hidden hover-scale">
+                <div className="md:flex">
+                  <div className="md:w-1/3 bg-gradient-to-br from-orange-600 to-purple-600 p-8 flex items-center justify-center">
+                    <Icon name="Calendar" size={64} className="text-white" />
+                  </div>
+                  <CardContent className="md:w-2/3 p-6">
+                    <Badge className="mb-3 gradient-primary border-0 text-white">Telegram</Badge>
+                    <h3 className="text-2xl font-bold mb-3">Бот для записи на услуги</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Система онлайн-записи для салона красоты с напоминаниями, управлением расписанием и автоматическим
+                      подтверждением. Обрабатывает 200+ записей ежедневно.
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="outline">Python</Badge>
+                      <Badge variant="outline">Aiogram</Badge>
+                      <Badge variant="outline">Redis</Badge>
+                      <Badge variant="outline">Google Calendar API</Badge>
+                    </div>
+                  </CardContent>
+                </div>
+              </Card>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'blog' && (
+          <div className="animate-fade-in max-w-4xl mx-auto">
+            <h2 className="text-4xl font-bold mb-3 text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Блог
+            </h2>
+            <p className="text-center text-muted-foreground mb-12 text-lg">
+              Статьи о ботах, кейсы и полезные советы
+            </p>
+
+            <div className="grid gap-6">
+              <Card className="hover-scale overflow-hidden">
+                <CardHeader>
+                  <Badge className="mb-3 w-fit">Руководство</Badge>
+                  <CardTitle className="text-2xl">Как выбрать подходящего бота для вашего бизнеса?</CardTitle>
+                  <CardDescription className="text-base">15 ноября 2024 • 5 мин чтения</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4">
+                    Разбираем основные типы ботов, их возможности и сценарии применения. Поможем определить,
+                    какой бот лучше всего подойдёт именно для ваших задач...
+                  </p>
+                  <Button variant="link" className="p-0 h-auto gradient-primary bg-clip-text text-transparent">
+                    Читать далее <Icon name="ArrowRight" size={16} className="ml-1" />
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="hover-scale overflow-hidden">
+                <CardHeader>
+                  <Badge className="mb-3 w-fit gradient-accent border-0 text-white">Кейс</Badge>
+                  <CardTitle className="text-2xl">Как бот увеличил продажи интернет-магазина на 40%</CardTitle>
+                  <CardDescription className="text-base">10 ноября 2024 • 7 мин чтения</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4">
+                    Реальная история: разработка Telegram-бота для магазина электроники. Показываем метрики,
+                    функционал и результаты внедрения за 3 месяца...
+                  </p>
+                  <Button variant="link" className="p-0 h-auto gradient-primary bg-clip-text text-transparent">
+                    Читать далее <Icon name="ArrowRight" size={16} className="ml-1" />
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="hover-scale overflow-hidden">
+                <CardHeader>
+                  <Badge className="mb-3 w-fit">Новости</Badge>
+                  <CardTitle className="text-2xl">Топ-5 трендов в разработке ботов в 2024 году</CardTitle>
+                  <CardDescription className="text-base">5 ноября 2024 • 4 мин чтения</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4">
+                    Что нового в мире чат-ботов? AI-интеграции, голосовые боты, мультиплатформенность и другие
+                    актуальные тенденции индустрии...
+                  </p>
+                  <Button variant="link" className="p-0 h-auto gradient-primary bg-clip-text text-transparent">
+                    Читать далее <Icon name="ArrowRight" size={16} className="ml-1" />
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="hover-scale overflow-hidden">
+                <CardHeader>
+                  <Badge className="mb-3 w-fit gradient-primary border-0 text-white">Советы</Badge>
+                  <CardTitle className="text-2xl">7 ошибок при создании бота, которых стоит избегать</CardTitle>
+                  <CardDescription className="text-base">1 ноября 2024 • 6 мин чтения</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4">
+                    Делюсь опытом: типичные ошибки при разработке ботов и как их избежать. От выбора платформы
+                    до UX-дизайна диалогов...
+                  </p>
+                  <Button variant="link" className="p-0 h-auto gradient-primary bg-clip-text text-transparent">
+                    Читать далее <Icon name="ArrowRight" size={16} className="ml-1" />
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         )}
 
         {activeTab === 'reviews' && (
           <div className="animate-fade-in max-w-4xl mx-auto">
             <h2 className="text-4xl font-bold mb-3 text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Отзывы покупателей
+              Отзывы клиентов
             </h2>
-            <p className="text-center text-muted-foreground mb-12">
-              Что говорят наши клиенты о Codeko
+            <p className="text-center text-muted-foreground mb-12 text-lg">
+              Что говорят те, кто уже работал со мной
             </p>
             <div className="grid gap-6">
               {customerReviews.map((review, index) => (
@@ -455,7 +516,7 @@ const Index = () => {
             </div>
             <div className="mt-12 text-center">
               <Card className="p-8 gradient-primary text-white">
-                <h3 className="text-2xl font-bold mb-4">Средняя оценка магазина</h3>
+                <h3 className="text-2xl font-bold mb-4">Средняя оценка</h3>
                 <div className="flex items-center justify-center gap-3 mb-2">
                   <span className="text-5xl font-bold">4.8</span>
                   <div className="flex gap-1">
@@ -475,81 +536,190 @@ const Index = () => {
           </div>
         )}
 
-        {activeTab === 'about' && (
-          <div className="animate-fade-in max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold mb-6 text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              О нашем магазине
+        {activeTab === 'contacts' && (
+          <div className="animate-fade-in max-w-3xl mx-auto">
+            <h2 className="text-4xl font-bold mb-3 text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Контакты
             </h2>
-            <Card className="p-8">
-              <div className="prose prose-lg max-w-none">
-                <p className="text-lg text-muted-foreground mb-6">
-                  Codeko — это современная платформа для онлайн-покупок, где стиль встречается с качеством.
-                  Мы тщательно отбираем каждый товар, чтобы предложить вам только лучшее.
-                </p>
-                
-                <Separator className="my-8" />
-                
-                <div className="grid md:grid-cols-3 gap-6 my-8">
-                  <Card className="p-6 text-center hover-scale border-2 border-primary/20">
-                    <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Icon name="Truck" size={32} className="text-white" />
-                    </div>
-                    <h3 className="font-bold text-xl mb-2">Быстрая доставка</h3>
-                    <p className="text-muted-foreground">
-                      Доставка по России от 1 до 3 дней
-                    </p>
-                  </Card>
-                  
-                  <Card className="p-6 text-center hover-scale border-2 border-secondary/20">
-                    <div className="w-16 h-16 gradient-accent rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Icon name="Shield" size={32} className="text-white" />
-                    </div>
-                    <h3 className="font-bold text-xl mb-2">Гарантия качества</h3>
-                    <p className="text-muted-foreground">
-                      100% оригинальные товары
-                    </p>
-                  </Card>
-                  
-                  <Card className="p-6 text-center hover-scale border-2 border-accent/20">
-                    <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Icon name="Headphones" size={32} className="text-white" />
-                    </div>
-                    <h3 className="font-bold text-xl mb-2">Поддержка 24/7</h3>
-                    <p className="text-muted-foreground">
-                      Всегда готовы помочь
-                    </p>
-                  </Card>
+            <p className="text-center text-muted-foreground mb-12 text-lg">
+              Свяжитесь со мной удобным способом
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-6 mb-12">
+              <Card className="p-6 hover-scale">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 gradient-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Icon name="Mail" size={24} className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold mb-1">Email</h3>
+                    <p className="text-muted-foreground">info@codeko.dev</p>
+                  </div>
                 </div>
-                
-                <Separator className="my-8" />
-                
-                <h3 className="text-2xl font-bold mb-4">Наша миссия</h3>
-                <p className="text-muted-foreground mb-6">
-                  Мы создаем пространство, где покупки становятся удовольствием. Каждый товар в нашем каталоге
-                  проходит строгий контроль качества, чтобы вы получали только то, что действительно заслуживает
-                  вашего внимания.
-                </p>
-                
-                <h3 className="text-2xl font-bold mb-4">Почему выбирают нас?</h3>
-                <ul className="space-y-3 text-muted-foreground">
-                  <li className="flex items-start gap-3">
-                    <Icon name="CheckCircle" size={24} className="text-primary mt-0.5 flex-shrink-0" />
-                    <span>Широкий ассортимент товаров от проверенных брендов</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <Icon name="CheckCircle" size={24} className="text-primary mt-0.5 flex-shrink-0" />
-                    <span>Удобная система оплаты и безопасные транзакции</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <Icon name="CheckCircle" size={24} className="text-primary mt-0.5 flex-shrink-0" />
-                    <span>Программа лояльности и регулярные акции</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <Icon name="CheckCircle" size={24} className="text-primary mt-0.5 flex-shrink-0" />
-                    <span>Простой возврат товара в течение 14 дней</span>
-                  </li>
-                </ul>
-              </div>
+              </Card>
+
+              <Card className="p-6 hover-scale">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 gradient-accent rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Icon name="MessageCircle" size={24} className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold mb-1">Telegram</h3>
+                    <p className="text-muted-foreground">@codeko_dev</p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6 hover-scale">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 gradient-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Icon name="Phone" size={24} className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold mb-1">Телефон</h3>
+                    <p className="text-muted-foreground">+7 (900) 123-45-67</p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6 hover-scale">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 gradient-accent rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Icon name="Globe" size={24} className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold mb-1">GitHub</h3>
+                    <p className="text-muted-foreground">github.com/codeko</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold mb-6">Форма обратной связи</h3>
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Ваше имя</label>
+                  <Input placeholder="Иван Иванов" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Email</label>
+                  <Input type="email" placeholder="ivan@example.com" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Тема</label>
+                  <Input placeholder="Создание Telegram-бота" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Сообщение</label>
+                  <Textarea placeholder="Расскажите о вашем проекте..." rows={5} />
+                </div>
+                <Button className="w-full gradient-primary text-white font-semibold">
+                  Отправить сообщение
+                  <Icon name="Send" size={18} className="ml-2" />
+                </Button>
+              </form>
+            </Card>
+          </div>
+        )}
+
+        {activeTab === 'faq' && (
+          <div className="animate-fade-in max-w-3xl mx-auto">
+            <h2 className="text-4xl font-bold mb-3 text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Часто задаваемые вопросы
+            </h2>
+            <p className="text-center text-muted-foreground mb-12 text-lg">
+              Ответы на популярные вопросы о создании ботов
+            </p>
+
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="text-left text-lg font-semibold">
+                  Сколько времени занимает разработка бота?
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground text-base">
+                  Сроки зависят от сложности проекта. Простой чат-бот можно создать за 3-5 дней, 
+                  более сложные системы с интеграциями займут 7-14 дней. После обсуждения задачи 
+                  я предоставлю точные сроки именно для вашего проекта.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-2">
+                <AccordionTrigger className="text-left text-lg font-semibold">
+                  Какие платформы вы поддерживаете?
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground text-base">
+                  Я разрабатываю ботов для Telegram, WhatsApp, веб-сайтов, Discord и других популярных 
+                  платформ. Также возможна кроссплатформенная разработка, когда один бот работает 
+                  сразу на нескольких платформах.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-3">
+                <AccordionTrigger className="text-left text-lg font-semibold">
+                  Нужно ли мне разбираться в программировании?
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground text-base">
+                  Нет, абсолютно не нужно! Я беру на себя всю техническую часть. От вас требуется 
+                  только описание задачи и желаемого функционала. После создания бота я предоставлю 
+                  понятную инструкцию по использованию.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-4">
+                <AccordionTrigger className="text-left text-lg font-semibold">
+                  Предоставляете ли вы поддержку после запуска?
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground text-base">
+                  Да! В стоимость разработки входит месяц бесплатной технической поддержки. 
+                  Я помогу с настройкой, исправлю возможные ошибки и отвечу на все вопросы. 
+                  После этого возможна платная поддержка и доработка функционала.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-5">
+                <AccordionTrigger className="text-left text-lg font-semibold">
+                  Можно ли интегрировать бота с моей CRM или базой данных?
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground text-base">
+                  Конечно! Я специализируюсь на интеграциях с популярными CRM (AmoCRM, Bitrix24, 
+                  HubSpot), платёжными системами, базами данных и API сторонних сервисов. 
+                  Это позволяет автоматизировать ваши бизнес-процессы максимально эффективно.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-6">
+                <AccordionTrigger className="text-left text-lg font-semibold">
+                  Какие способы оплаты вы принимаете?
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground text-base">
+                  Принимаю оплату банковским переводом, на карту, через СБП, PayPal. 
+                  Работаю по предоплате 50% для начала разработки, остаток после сдачи проекта. 
+                  Для постоянных клиентов возможны индивидуальные условия.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-7">
+                <AccordionTrigger className="text-left text-lg font-semibold">
+                  Можно ли добавить новые функции после запуска бота?
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground text-base">
+                  Да, без проблем! Я пишу чистый и документированный код, поэтому боты легко 
+                  масштабируются. Вы всегда можете заказать доработку и добавление нового функционала. 
+                  Стоимость и сроки обсуждаем индивидуально в зависимости от объёма работ.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            <Card className="mt-12 p-8 text-center gradient-primary text-white">
+              <h3 className="text-2xl font-bold mb-3">Не нашли ответ на свой вопрос?</h3>
+              <p className="mb-6 opacity-90">
+                Напишите мне, и я с радостью отвечу на все ваши вопросы!
+              </p>
+              <Button size="lg" variant="secondary" className="font-semibold">
+                Задать вопрос
+                <Icon name="MessageCircle" size={20} className="ml-2" />
+              </Button>
             </Card>
           </div>
         )}
@@ -561,22 +731,22 @@ const Index = () => {
             <div>
               <h3 className="font-bold text-xl mb-4">Codeko</h3>
               <p className="text-purple-200">
-                Ваш надежный партнер в мире онлайн-шопинга
+                Профессиональная разработка ботов для вашего бизнеса
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Компания</h4>
+              <h4 className="font-semibold mb-4">Услуги</h4>
               <ul className="space-y-2 text-purple-200">
-                <li><a href="#" className="hover:text-white transition-colors">О нас</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Вакансии</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Блог</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Telegram-боты</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">WhatsApp-боты</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Чат-боты для сайтов</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Помощь</h4>
+              <h4 className="font-semibold mb-4">Информация</h4>
               <ul className="space-y-2 text-purple-200">
-                <li><a href="#" className="hover:text-white transition-colors">Доставка</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Возврат</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Портфолио</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Блог</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
               </ul>
             </div>
@@ -585,18 +755,18 @@ const Index = () => {
               <ul className="space-y-2 text-purple-200">
                 <li className="flex items-center gap-2">
                   <Icon name="Mail" size={16} />
-                  info@shopvibe.ru
+                  info@codeko.dev
                 </li>
                 <li className="flex items-center gap-2">
-                  <Icon name="Phone" size={16} />
-                  8 (800) 555-35-35
+                  <Icon name="MessageCircle" size={16} />
+                  @codeko_dev
                 </li>
               </ul>
             </div>
           </div>
           <Separator className="my-8 bg-purple-700" />
           <div className="text-center text-purple-200">
-            <p>&copy; 2024 ShopVibe. Все права защищены.</p>
+            <p>&copy; 2024 Codeko. Все права защищены.</p>
           </div>
         </div>
       </footer>
